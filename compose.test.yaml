@@ -1,0 +1,14 @@
+services:
+  test:
+    build: .
+    volumes:
+      - ${TEST_DIR}:/test/data/images
+      - ${TEST_FILE}:/test/data/train.csv
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    command: python test.py

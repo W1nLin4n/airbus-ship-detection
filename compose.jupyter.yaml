@@ -1,0 +1,10 @@
+services:
+  jupyter:
+    build: .
+    volumes:
+      - ${TRAIN_DIR}:/train/data/images
+      - ${TRAIN_FILE}:/train/data/train.csv
+      - ./data-analysis.ipynb:/app/data-analysis.ipynb
+    ports:
+      - "8888:8888"
+    command: jupyter notebook --ip 0.0.0.0 --no-browser --allow-root

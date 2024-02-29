@@ -1,0 +1,14 @@
+services:
+  train:
+    build: .
+    volumes:
+      - ${TRAIN_DIR}:/train/data/images
+      - ${TRAIN_FILE}:/train/data/train.csv
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    command: python train.py
