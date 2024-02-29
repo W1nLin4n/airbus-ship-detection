@@ -2,8 +2,9 @@ services:
   test:
     build: .
     volumes:
-      - ${TEST_DIR}:/test/data/images
-      - ${TEST_FILE}:/test/data/train.csv
+      - ${TEST_DIR}:/data/images
+      - ${TEST_FILE}:/data/masks.csv
+      - ${PARAMETERS_FILE}:/data/model.keras
     deploy:
       resources:
         reservations:

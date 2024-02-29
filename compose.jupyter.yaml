@@ -2,8 +2,8 @@ services:
   jupyter:
     build: .
     volumes:
-      - ${TRAIN_DIR}:/train/data/images
-      - ${TRAIN_FILE}:/train/data/train.csv
+      - ${TRAIN_DIR}:/data/images
+      - ${TRAIN_FILE}:/data/masks.csv
       - ./data-analysis.ipynb:/app/data-analysis.ipynb
     ports:
       - "8888:8888"
