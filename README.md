@@ -52,3 +52,9 @@ Solution pipeline looks like this:
 - Applying augmentations on training data
 - Building UNet model and training it, using dice score and bce
 - Saving weights of model to file
+
+Result is quite good for such a small network:
+- Private score(93% of test data): 0.58662
+- Public score(7% of test data): 0.32421
+
+From these we can understand, that the model generalized pretty well.
