@@ -33,9 +33,9 @@ def main():
             tf.TensorSpec(shape=(DEFAULT_HEIGHT, DEFAULT_WIDTH, 1), dtype=tf.float32)
         )
     )
-    train_dataset = train_dataset.map(Augment()).repeat().batch(DEFAULT_BATCH,
-                                                                num_parallel_calls=AUTOTUNE,
-                                                                deterministic=False).prefetch(AUTOTUNE)
+    train_dataset = train_dataset.map(Augment()).batch(DEFAULT_BATCH,
+                                                       num_parallel_calls=AUTOTUNE,
+                                                       deterministic=False).prefetch(AUTOTUNE)
 
     # Creating validation dataset
     print("Creating validation samples generator")

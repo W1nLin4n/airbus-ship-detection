@@ -66,12 +66,15 @@ def image_gen(df: pd.DataFrame, valid=False, batch_size = DEFAULT_BATCH) -> (np.
         else:
             balanced_df = df.groupby("ships").apply(sample_by_ships)
             balanced_df = list(balanced_df.groupby("ImageId"))
+        while True:
+            # Iterating over selected samples
+            for img_id, masks in balanced_df:
+                rgb = np.asarray(Image.open(TRAIN_IMAGES_DIR + "/" + img_id))
+                mask = np.expand_dims(rle_decode(masks["EncodedPixels"].values[0]), -1)
+                yield rgb, mask
+            if valid:
+                break
 
-        # Iterating selected samples and packing them in batches
-        for img_id, masks in balanced_df:
-            rgb = np.asarray(Image.open(TRAIN_IMAGES_DIR + "/" + img_id))
-            mask = np.expand_dims(rle_decode(masks["EncodedPixels"].values[0]), -1)
-            yield rgb, mask
     return gen
 
 def read_train_data(train_images_folder = TRAIN_IMAGES_DIR, train_file = TRAIN_FILE) -> (pd.DataFrame, pd.DataFrame):
