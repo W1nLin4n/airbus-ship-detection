@@ -17,7 +17,7 @@ MODEL_PATH = "/data/model.keras"
 SAMPLING_SIZE = 2000
 
 # Default batch size
-DEFAULT_BATCH=8
+DEFAULT_BATCH=4
 
 # Default dimensions
 DEFAULT_HEIGHT = 768
@@ -31,7 +31,7 @@ BATCHES_PER_EPOCH = (SAMPLING_SIZE * 20) // DEFAULT_BATCH
 BATCHES_PER_VALID = 1600 // DEFAULT_BATCH
 
 # Default epochs
-N_EPOCHS = 1
+N_EPOCHS = 100
 
 # Amount of subprocesses to use in preprocessing
 PROCESSES = 8

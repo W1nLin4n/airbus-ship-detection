@@ -67,14 +67,14 @@ def main():
     # Setting up lr reduction
     lr_reduction = ReduceLROnPlateau(monitor='val_dice_coeff',
                                      factor=0.3,
-                                     patience=2,
+                                     patience=3,
                                      verbose=1,
                                      mode="max",
                                      min_lr=1e-6)
     early_stop = EarlyStopping(monitor="val_dice_coeff",
                                mode="max",
                                verbose=1,
-                               patience=5,
+                               patience=10,
                                restore_best_weights=True)
 
     print("Starting training")

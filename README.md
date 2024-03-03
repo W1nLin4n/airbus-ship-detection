@@ -54,7 +54,7 @@ Solution pipeline looks like this:
 - Saving weights of model to file
 
 Result is quite good for such a small network:
-- Private score(93% of test data): 0.58662
-- Public score(7% of test data): 0.32421
+- Private score(93% of test data): 0.76566
+- Public score(7% of test data): 0.5209
 
 From these we can understand, that the model generalized pretty well.
