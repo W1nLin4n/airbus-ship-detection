@@ -1,6 +1,5 @@
-import tensorflow as tf
-from tensorflow.keras import models, layers
-from config import DEFAULT_BATCH, DEFAULT_HEIGHT, DEFAULT_WIDTH, N_CHANNELS
+from keras import models, layers
+from config import DEFAULT_HEIGHT, DEFAULT_WIDTH, N_CHANNELS
 
 
 def build_model():

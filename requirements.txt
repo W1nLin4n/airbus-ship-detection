@@ -1,3 +1,5 @@
+keras>=3.0.5
+tf-nightly
 pandas~=2.2.1
 numpy~=1.26.2
 scikit-learn~=1.4.1.post1

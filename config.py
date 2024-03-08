@@ -14,7 +14,7 @@ TEST_FILE = "/data/masks.csv"
 MODEL_PATH = "/data/model.keras"
 
 # How many samples should we expect from each class(in our case, class is an amount of boats in image)
-SAMPLING_SIZE = 2000
+SAMPLING_SIZE = 50
 
 # Default batch size
 DEFAULT_BATCH=4
@@ -34,4 +34,15 @@ BATCHES_PER_VALID = 1600 // DEFAULT_BATCH
 N_EPOCHS = 100
 
 # Amount of subprocesses to use in preprocessing
-PROCESSES = 8
+PROCESSES = 16
+
+# Optimizer parameters
+BASE_LR = 1e-5
+MIN_LR = 1e-8
+LR_REDUCTION_FACTOR = 0.1
+LR_PATIENCE = 5
+
+EARLY_STOP_PATIENCE = 15
+
+# Influence of BCE in training
+BCE_FACTOR = 1

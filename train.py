@@ -1,11 +1,11 @@
-from config import DEFAULT_HEIGHT, DEFAULT_WIDTH, N_CHANNELS, MODEL_PATH, N_EPOCHS, DEFAULT_BATCH, BATCHES_PER_EPOCH, BATCHES_PER_VALID
+from config import *
 from scripts.preprocessing import read_train_data, image_gen
 from scripts.preprocessing import Augment
 from scripts.model import build_model
 from scripts.metrics import dice_bce_loss, dice_coeff
 import tensorflow as tf
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
+from keras.optimizers import Adam
+from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 from tensorflow.data import AUTOTUNE
 import gc
 gc.enable()
@@ -33,9 +33,11 @@ def main():
             tf.TensorSpec(shape=(DEFAULT_HEIGHT, DEFAULT_WIDTH, 1), dtype=tf.float32)
         )
     )
-    train_dataset = train_dataset.map(Augment()).batch(DEFAULT_BATCH,
-                                                       num_parallel_calls=AUTOTUNE,
-                                                       deterministic=False).prefetch(AUTOTUNE)
+    augment = Augment()
+    train_dataset = (train_dataset
+                     .map(augment, num_parallel_calls=AUTOTUNE, deterministic=False)
+                     .batch(DEFAULT_BATCH, num_parallel_calls=AUTOTUNE, deterministic=False)
+                     .prefetch(AUTOTUNE))
 
     # Creating validation dataset
     print("Creating validation samples generator")
@@ -47,15 +49,16 @@ def main():
             tf.TensorSpec(shape=(DEFAULT_HEIGHT, DEFAULT_WIDTH, 1), dtype=tf.float32)
         )
     )
-    val_dataset = val_dataset.repeat().batch(DEFAULT_BATCH,
-                                             num_parallel_calls=AUTOTUNE,
-                                             deterministic=False).prefetch(AUTOTUNE)
+    val_dataset = (val_dataset
+                   .repeat()
+                   .batch(DEFAULT_BATCH, num_parallel_calls=AUTOTUNE, deterministic=False)
+                   .prefetch(AUTOTUNE))
 
     # Creating model
     print("Building model")
     model = build_model()
     model.summary()
-    model.compile(optimizer=Adam(), loss=dice_bce_loss, metrics=[dice_coeff, "binary_accuracy"])
+    model.compile(optimizer=Adam(learning_rate=BASE_LR), loss=dice_bce_loss, metrics=[dice_coeff, "binary_accuracy"])
 
     # Setting up checkpoints system
     checkpoint = ModelCheckpoint(MODEL_PATH,
@@ -66,15 +69,15 @@ def main():
 
     # Setting up lr reduction
     lr_reduction = ReduceLROnPlateau(monitor='val_dice_coeff',
-                                     factor=0.3,
-                                     patience=3,
+                                     factor=LR_REDUCTION_FACTOR,
+                                     patience=LR_PATIENCE,
                                      verbose=1,
                                      mode="max",
-                                     min_lr=1e-6)
+                                     min_lr=MIN_LR)
     early_stop = EarlyStopping(monitor="val_dice_coeff",
                                mode="max",
                                verbose=1,
-                               patience=10,
+                               patience=EARLY_STOP_PATIENCE,
                                restore_best_weights=True)
 
     print("Starting training")

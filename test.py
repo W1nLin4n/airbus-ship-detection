@@ -2,8 +2,6 @@ import os
 
 import numpy as np
 import pandas as pd
-import tensorflow as tf
-import keras
 from PIL import Image
 from config import MODEL_PATH, TEST_IMAGES_DIR, TEST_FILE, DEFAULT_BATCH
 from scripts.utils import rle_encode_test

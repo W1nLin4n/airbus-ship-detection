@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-from tensorflow.keras import layers
+import keras
+from keras import layers
 from sklearn.model_selection import train_test_split
 from PIL import Image
 from scripts.utils import find_invalid_images, masks_combine, rle_decode, rle_encode
@@ -14,25 +15,26 @@ class Augment(layers.Layer):
 
     # The same seed is used everywhere so augmentations on inputs and labels stay consistent
     def __init__(self, seed=42):
-        super().__init__
+        super().__init__()
 
         # Defining inputs augmentations
-        self.augment_inputs = tf.keras.Sequential(
+        self.augment_inputs = keras.Sequential(
             layers=[
                 layers.Rescaling(1./255),
                 layers.RandomFlip("horizontal_and_vertical", seed=seed),
                 layers.RandomRotation(0.1, seed=seed),
-                layers.RandomZoom(0.15, 0.15, seed=seed)
+                layers.RandomZoom((-0.2, 0.1), (-0.2, 0.1), seed=seed)
             ],
             name="Input_augmentations"
         )
 
         # Defining labels augmentations
-        self.augment_labels = tf.keras.Sequential(
+        self.augment_labels = keras.Sequential(
             layers=[
                 layers.RandomFlip("horizontal_and_vertical", seed=seed),
                 layers.RandomRotation(0.1, seed=seed),
-                layers.RandomZoom(0.15, 0.15, seed=seed)
+                layers.RandomZoom((-0.2, 0.1), (-0.2, 0.1), seed=seed),
+                layers.Lambda(lambda x: tf.where(x > 0.5, 1., 0.))
             ],
             name="Labels_augmentations"
         )
@@ -50,7 +52,7 @@ def sample_by_ships(df: pd.DataFrame, samples=SAMPLING_SIZE):
     """
     return df.sample(samples, replace=True)
 
-def image_gen(df: pd.DataFrame, valid=False, batch_size = DEFAULT_BATCH) -> (np.ndarray, np.ndarray):
+def image_gen(df: pd.DataFrame, valid=False) -> (np.ndarray, np.ndarray):
     """
     Generates data for training/validation
     :param df: samples data
